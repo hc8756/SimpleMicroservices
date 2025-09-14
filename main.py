@@ -96,6 +96,13 @@ def update_business(business_ein: str, update: BusinessUpdate):
     businesses[business_ein] = BusinessRead(**stored)
     return businesses[business_ein]
 
+@app.delete("/businesses/{ein}", status_code=204)
+def delete_business(ein: str):
+    if ein not in businesses:
+        raise HTTPException(status_code=404, detail="Business not found")
+    del businesses[ein]
+    return None
+
 # -----------------------------------------------------------------------------
 # Product endpoints
 # -----------------------------------------------------------------------------
@@ -141,6 +148,13 @@ def update_product(product_id: int, update: ProductUpdate):
     stored.update(update.model_dump(exclude_unset=True))
     products[product_id] = ProductRead(**stored)
     return products[product_id]
+
+@app.delete("/products/{product_id}", status_code=204)
+def delete_product(product_id: int):
+    if product_id not in products:
+        raise HTTPException(status_code=404, detail="Product not found")
+    del products[product_id]
+    return None
 
 # -----------------------------------------------------------------------------
 # Root
